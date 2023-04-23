@@ -1,12 +1,29 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
 import { AppService } from './app.service';
+import Blog from './interface';
 
-@Controller()
+@Controller('blogs')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getTodos(): Promise<Blog[]> {
+    console.log('hello');
+    return await this.appService.getBlogs();
+  }
+
+  @Post()
+  async createTodo(@Body() blog: Blog): Promise<Blog> {
+    return await this.appService.createBlog(blog);
+  }
+
+  @Get(':id')
+  async getTodo(@Param() id: string): Promise<Blog> {
+    return await this.appService.getBlog(id);
+  }
+
+  @Delete(':id')
+  async deleteTodo(@Param() id: string): Promise<any> {
+    return await this.appService.deleteBlog(id);
   }
 }
